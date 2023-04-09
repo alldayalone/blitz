@@ -1,10 +1,8 @@
+import { useEffect, useReducer, useState } from 'react'
+import { TonConnectButton, TonConnectUIProvider } from '@tonconnect/ui-react'
+import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
 import styles from './page.module.css'
-import { createContext, useCallback, useEffect, useReducer, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import { TonConnectButton, TonConnectUIProvider } from '@tonconnect/ui-react'
-import { Octokit } from 'octokit'
-import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 
 function useAsyncState<T>(fn: () => Promise<T>) {
   const [state, setState] = useState<T>()
@@ -129,9 +127,7 @@ export default function Home() {
     return <p>{error.message}</p>
   }
 
-  // display issues in a simple list
   return (
-
       <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
         <main className={styles.main}>
           <TonConnectButton className='mb-10'/>
