@@ -1,9 +1,13 @@
 import { useContext, useEffect, useState } from 'react'
-import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
+// import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
 import { DaoStateDispatchContext, DaoStateContext, DaoStateProvider } from '@/stores/daoState';
 import styles from './page.module.css'
+
+function useTonAddress() {
+  return '0x123';
+}
 
 function useAsyncState<T>(fn: () => Promise<T>) {
   const [state, setState] = useState<T>()
@@ -74,10 +78,10 @@ export default function Home() {
 
   return (
 
-      <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
+      // <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
         <DaoStateProvider>
           <main className={styles.main}>
-            <TonConnectButton className='mb-10'/>
+            {/* <TonConnectButton className='mb-10'/> */}
 
           
             <div className='flex flex-col gap-5'>
@@ -86,7 +90,7 @@ export default function Home() {
           </main>
         <DevControlPanel />
        </DaoStateProvider>
-      </TonConnectUIProvider >
+      // </TonConnectUIProvider >
 
   )
 }
