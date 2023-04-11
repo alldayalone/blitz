@@ -1,4 +1,6 @@
 import { createContext, useEffect, useReducer } from 'react';
+import { insertVote, getVotes } from '@/utils/mongoClient';
+
 
 export interface DaoState {
   proposals: {
@@ -96,13 +98,30 @@ function reducer(state: DaoState, action: DaoAction): DaoState {
   }
 }
 
-const initializer = () => (typeof window !== "undefined" && JSON.parse(localStorage.getItem('dao-state') ?? 'null')) || initialState;
-
+// const initializer = () => (typeof window !== "undefined" && JSON.parse(localStorage.getItem('dao-state') ?? 'null')) || initialState;
+const initializer = () => initialState;
 export const DaoStateContext = createContext<DaoState>(initialState);
 export const DaoStateDispatchContext = createContext<React.Dispatch<DaoAction>>(() => {});
 
 export function DaoStateProvider({ children }: { children: React.ReactNode }) {
   const [daoState, dispatch] = useReducer(reducer, initialState, initializer);
+
+  useEffect(() => {
+    (async () => {
+
+      const votes: any[] = await getVotes();
+
+      // for each unique number, turn it into a proposal
+      const numbers = [...new Set(votes.map((vote) => vote.number))];
+      numbers.forEach((number) => {
+        dispatch({ type: 'turn_into_proposal', payload: { number } });
+      });
+
+      votes.forEach((vote) => {
+        dispatch({ type: 'vote', payload: vote });
+      });
+    })();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('dao-state', JSON.stringify(daoState));
