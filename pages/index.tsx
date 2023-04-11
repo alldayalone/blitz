@@ -1,7 +1,8 @@
-import { useEffect, useReducer, useState } from 'react'
-import { TonConnectButton, TonConnectUIProvider } from '@tonconnect/ui-react'
+import { useContext, useEffect, useState } from 'react'
+import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
+import { DaoStateDispatchContext, DaoStateContext, DaoStateProvider } from '@/stores/daoState';
 import styles from './page.module.css'
 
 function useAsyncState<T>(fn: () => Promise<T>) {
@@ -30,82 +31,26 @@ function useAsyncState<T>(fn: () => Promise<T>) {
   return [state, asyncSetState, loading, error] as const
 }
 
-interface DaoState {
-  proposals: {
-    number: number
-    transactions: {
-      from: string
-      comment: 'yes' | 'no'
-    }[]
-  }[]
+
+
+
+
+
+function DevControlPanel() {
+  const dispatch = useContext(DaoStateDispatchContext);
+  const tonAddress = useTonAddress();
+
+  return (
+    <div className='fixed grid top-5 right-5 gap-3 bg-slate-200 p-5'>
+      <div className='w-max'>Dev Control Panel</div>
+      <button className='bg-white p-2' onClick={() => dispatch({ type: 'reset' })}>Reset state</button>
+      <button className='bg-white p-2' onClick={() => dispatch({ type: 'randomize' })}>Randomize</button>
+      <button className='bg-white p-2' onClick={() => dispatch({ type: 'revoke_votes', payload: { from: tonAddress }})}>Revoke votes</button>
+    </div>
+  )
 }
 
-interface TurnIntoProposalAction {
-  type: 'turn_into_proposal'
-  payload: {
-    number: number
-  }
-}
-
-interface VoteAction {
-  type: 'vote'
-  payload: {
-    number: number
-    from: string
-    comment: 'yes' | 'no'
-  }
-}
-
-type DaoAction = TurnIntoProposalAction | VoteAction;
-
-const initialState: DaoState = {
-  proposals: []
-}
-
-function reducer(state: DaoState, action: DaoAction): DaoState {
-  switch (action.type) {
-    case 'turn_into_proposal': {
-      return {
-        ...state,
-        proposals: [
-          ...state.proposals,
-          { number: action.payload.number, transactions: [] }
-        ]
-      }
-
-    }
-    case 'vote': {
-      return {
-        ...state,
-        proposals: state.proposals.map((proposal) => {
-          if (proposal.number === action.payload.number) {
-            return {
-              ...proposal,
-              transactions: [
-                ...proposal.transactions,
-                {
-                  from: action.payload.from,
-                  comment: action.payload.comment
-                }
-              ]
-            }
-          }
-
-          return proposal;
-        })
-      }
-    }
-  }
-}
-
-const initializer = () => (typeof window !== "undefined" && JSON.parse(localStorage.getItem('dao-state') ?? 'null')) || initialState;
-
-export default function Home() {
-  const [daoState, dispatch] = useReducer(reducer, initialState, initializer);
-
-  useEffect(() => {
-    localStorage.setItem('dao-state', JSON.stringify(daoState));
-  }, [daoState]);
+export default function Home() {  
 
 
   const [issues, setState, loading, error] = useAsyncState(async () => {
@@ -128,27 +73,39 @@ export default function Home() {
   }
 
   return (
+
       <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
-        <main className={styles.main}>
-          <TonConnectButton className='mb-10'/>
+        <DaoStateProvider>
+          <main className={styles.main}>
+            <TonConnectButton className='mb-10'/>
+
           
-          <div className='flex flex-col gap-5'>
-            {issues.map((issue) => <Issue key={issue.id} issue={issue} daoState={daoState} dispatch={dispatch} />)}
-          </div>
-        </main>
+            <div className='flex flex-col gap-5'>
+              {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}
+            </div>
+          </main>
+        <DevControlPanel />
+       </DaoStateProvider>
       </TonConnectUIProvider >
 
   )
 }
 
-function Issue({ issue, daoState, dispatch }: {
+function Issue({ issue }: {
   issue: GetResponseDataTypeFromEndpointMethod<typeof octokit.rest.issues.listForRepo>[number],
-  daoState: DaoState,
-  dispatch: React.Dispatch<DaoAction>
 }) {
-  const isProposal = daoState.proposals.find((proposal) => proposal.number === issue.number);
-  const yesVotes = isProposal && isProposal.transactions.filter((transaction) => transaction.comment === 'yes').length;
-  const noVotes = isProposal && isProposal.transactions.filter((transaction) => transaction.comment === 'no').length;
+  const daoState = useContext(DaoStateContext);
+  const dispatch = useContext(DaoStateDispatchContext);
+  const tonAddress = useTonAddress();
+  const proposal = daoState.proposals.find((proposal) => proposal.number === issue.number);
+  const isProposal = Boolean(proposal);
+  const isAuth = Boolean(tonAddress);
+
+  const voteTransaction = proposal?.transactions.find((transaction) => transaction.from === tonAddress);
+  const isVoted = Boolean(voteTransaction);
+
+  const yesVotes = proposal?.transactions.filter((transaction) => transaction.comment === 'yes').length;
+  const noVotes = proposal?.transactions.filter((transaction) => transaction.comment === 'no').length;
 
   const issueBg = (() => {
     if (yesVotes === undefined || noVotes === undefined) return '';
@@ -157,29 +114,41 @@ function Issue({ issue, daoState, dispatch }: {
     if (noVotes > yesVotes) return 'bg-red-200';
   })();
 
+  const yesBg = (() => {
+    if (voteTransaction?.comment === 'yes') return 'bg-green-700';
+    if (voteTransaction?.comment === 'no') return 'bg-gray-200';
+    return 'bg-green-400';
+  })();
+
+  const noBg = (() => {
+    if (voteTransaction?.comment === 'yes') return 'bg-gray-200';
+    if (voteTransaction?.comment === 'no') return 'bg-red-700';
+    return 'bg-red-400';
+  })();
+
   return (
     <div className={`flex justify-between border border-black px-2 py-1 ${issueBg}`}>
     <h3>#{issue.number} {issue.title}</h3>
     <div className='flex gap-3'>
-      {!isProposal && <button className='bg-blue-400' onClick={() => dispatch({
+      {isAuth && !isProposal && <button className='bg-blue-400' onClick={() => dispatch({
         type: 'turn_into_proposal',
         payload: {
           number: issue.number
         }
       })}>Turn into proposal</button>}
-      {isProposal && <button className='bg-green-400' onClick={() => dispatch({
+      {isProposal && <button disabled={!isAuth || isVoted} className={yesBg} onClick={() => dispatch({
         type: 'vote',
         payload: {
           number: issue.number,
-          from: '0:123',
+          from: tonAddress,
           comment: 'yes'
         }
       })}>{yesVotes} Yes</button>}
-      {isProposal && <button className='bg-red-400' onClick={() => dispatch({
+      {isProposal && <button disabled={!isAuth || isVoted} className={noBg} onClick={() => dispatch({
         type: 'vote',
         payload: {
           number: issue.number,
-          from: '0:123',
+          from: tonAddress,
           comment: 'no'
         }
       })}>{noVotes} No</button>}
