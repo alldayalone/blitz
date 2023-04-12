@@ -1,7 +1,11 @@
 import { VoteProvider, Vote } from "./VoteProvider";
 
 export class LocalStorageProvider implements VoteProvider {
-  key = 'votes';
+  key: string;
+
+  constructor(readonly repo: string) {
+    this.key = 'votes-' + repo;
+  }
 
   async getVotes(): Promise<Vote[]> {
     const votes = localStorage?.getItem(this.key);

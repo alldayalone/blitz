@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 // import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
@@ -6,6 +6,7 @@ import octokit from '@/utils/octokit'
 import { DaoStateDispatchContext, DaoStateContext, DaoStateProvider } from '@/stores/daoState';
 import styles from './page.module.css'
 import { IpProvider, useIp } from '@/stores/ip';
+import { RepoProvider, useRepo } from '@/stores/repo';
 
 function useTonAddress() {
   return useIp();
@@ -58,16 +59,34 @@ function DevControlPanel() {
 }
 
 export default function Home() {  
-  const [issues, setState, loading, error] = useAsyncState(async () => {
+  return (
+    // <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
+    <RepoProvider>
+      <IpProvider>
+        <DaoStateProvider>
+          <Main />
+          <DevControlPanel />
+        </DaoStateProvider>
+      </IpProvider>
+      </RepoProvider>
+    // </TonConnectUIProvider >
+  )
+}
+
+function Main() {
+  const repo = useRepo();
+  const getIssues = useCallback(async () => {
+    const [owner, repoName] = repo.split('/');
     // get open issues from https://github.com/theoberton/3.14xl
     const { data } = await octokit.rest.issues.listForRepo({
-      owner: 'theoberton',
-      repo: 'github-dao',
+      owner,
+      repo: repoName,
       state: 'open',
     });
 
-    return data;  
-  });
+    return data;
+  }, [repo]);
+  const [issues, setState, loading, error] = useAsyncState(getIssues);
 
   if (!issues || loading) {
     return <p>Loading...</p>
@@ -76,24 +95,14 @@ export default function Home() {
   if (error) {
     return <p>{error.message}</p>
   }
-
   return (
-      // <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
-    <IpProvider>
-      <DaoStateProvider>
-        <main className={styles.main}>
-          {/* <TonConnectButton className='mb-10'/> */}
+    <main className={styles.main}>
+    {/* <TonConnectButton className='mb-10'/> */}
 
-        
-          <div className='flex flex-col gap-5'>
-            {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}
-          </div>
-        </main>
-      <DevControlPanel />
-      </DaoStateProvider>
-    </IpProvider>
-      // </TonConnectUIProvider >
-
+    <div className='flex flex-col gap-5'>
+      {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}
+    </div>
+  </main>
   )
 }
 

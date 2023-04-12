@@ -5,6 +5,7 @@ export interface Vote {
 }
 
 export abstract class VoteProvider {
+  constructor(readonly repo: string) {}
   abstract insertVote(vote: Vote): Promise<void>;
   abstract getVotes(): Promise<Vote[]>;
 }
