@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 // import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
+import { useRouter } from 'next/router';
 
 import { DaoStateDispatchContext, DaoStateContext, DaoStateProvider } from '@/stores/daoState';
 import styles from './page.module.css'
@@ -20,6 +21,7 @@ function useAsyncState<T>(fn: () => Promise<T>) {
   const asyncSetState = useEffect(() => {
     async function main() {
       try {
+        setError(null);
         setState(await fn())
       } catch (error) {
         if (error instanceof Error) {
@@ -55,6 +57,28 @@ function DevControlPanel() {
       <button className='bg-white p-2' onClick={() => dispatch({ type: 'randomize' })}>Randomize</button>
       <button className='bg-white p-2' onClick={() => dispatch({ type: 'revoke_votes', payload: { from: tonAddress }})}>Revoke votes</button>
     </div>
+  )
+}
+
+function SetRepo() {
+  const repo = useRepo();
+  const router = useRouter()
+  function handleSubmit(e: any) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form) as any;
+    const formJson = Object.fromEntries(formData.entries())
+    router.push(`/?repo=${formJson.repo}`)
+  }
+
+  return (
+    <form className='flex gap-3 mb-10' method="post" onSubmit={handleSubmit}>
+      <input className='bg-white' name="repo" defaultValue={repo}/>
+      <button className='bg-white p-2 border border-black'>Change repo</button>
+    </form>
   )
 }
 
@@ -98,6 +122,7 @@ function Main() {
   return (
     <main className={styles.main}>
     {/* <TonConnectButton className='mb-10'/> */}
+    <SetRepo />
 
     <div className='flex flex-col gap-5'>
       {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}

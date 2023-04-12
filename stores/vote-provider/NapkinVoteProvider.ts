@@ -9,7 +9,18 @@ export class NapkinVoteProvider implements VoteProvider {
   }
 
   async getVotes(): Promise<Vote[]> {
-    return fetch(this.url).then(res => res.json()).then(votes => votes.filter(Boolean));
+    try {
+      const res = await fetch(this.url);
+      const votes = await res.json();
+      
+      if (!votes || !Array.isArray(votes)) throw new Error('Invalid response');
+      
+      return votes.filter(Boolean);
+    } catch (error) {
+      console.error(error);
+
+      return [];
+    }
   }
 
   async insertVote(vote: Vote): Promise<void> {
