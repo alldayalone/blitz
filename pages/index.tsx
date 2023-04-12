@@ -2,15 +2,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 // import { TonConnectButton, TonConnectUIProvider, useTonAddress } from '@tonconnect/ui-react'
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
 import octokit from '@/utils/octokit'
-import { insertVote, getVotes } from '@/utils/mongoClient';
 
 import { DaoStateDispatchContext, DaoStateContext, DaoStateProvider } from '@/stores/daoState';
 import styles from './page.module.css'
-
-const ipContext = createContext<string | undefined>(undefined);
+import { IpProvider, useIp } from '@/stores/ip';
 
 function useTonAddress() {
-  return useContext(ipContext);
+  return useIp();
 }
 
 function useAsyncState<T>(fn: () => Promise<T>) {
@@ -39,11 +37,6 @@ function useAsyncState<T>(fn: () => Promise<T>) {
   return [state, asyncSetState, loading, error] as const
 }
 
-
-
-
-
-
 function DevControlPanel() {
   const dispatch = useContext(DaoStateDispatchContext);
   const tonAddress = useTonAddress();
@@ -51,6 +44,8 @@ function DevControlPanel() {
   if (!tonAddress) {
     return null;
   }
+
+  if (location.hostname !== 'localhost') return null;
 
   return (
     <div className='fixed grid top-5 right-5 gap-3 bg-slate-200 p-5'>
@@ -63,20 +58,6 @@ function DevControlPanel() {
 }
 
 export default function Home() {  
-
-  const [ip, setIp] = useState<string>();
-  
-  useEffect(() => {
-    (async () => {
-      fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
-        console.log(data);
-        setIp(data.ip);
-      });
-    })();
-  }, []);
-
-
-
   const [issues, setState, loading, error] = useAsyncState(async () => {
     // get open issues from https://github.com/theoberton/3.14xl
     const { data } = await octokit.rest.issues.listForRepo({
@@ -98,19 +79,19 @@ export default function Home() {
 
   return (
       // <TonConnectUIProvider manifestUrl="https://pi.oberton.io/tonconnect-manifest.json">
-    <ipContext.Provider value={ip}>
-        <DaoStateProvider>
-          <main className={styles.main}>
-            {/* <TonConnectButton className='mb-10'/> */}
+    <IpProvider>
+      <DaoStateProvider>
+        <main className={styles.main}>
+          {/* <TonConnectButton className='mb-10'/> */}
 
-          
-            <div className='flex flex-col gap-5'>
-              {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}
-            </div>
-          </main>
-        <DevControlPanel />
-       </DaoStateProvider>
-      </ipContext.Provider>
+        
+          <div className='flex flex-col gap-5'>
+            {issues.map((issue) => <Issue key={issue.id} issue={issue} />)}
+          </div>
+        </main>
+      <DevControlPanel />
+      </DaoStateProvider>
+    </IpProvider>
       // </TonConnectUIProvider >
 
   )
@@ -170,11 +151,6 @@ function Issue({ issue }: {
             comment: 'yes'
           }
         });
-        insertVote({
-          number: issue.number,
-          from: tonAddress,
-          comment: 'yes'
-        })
       }}>{yesVotes} Yes</button>}
       {isProposal && tonAddress && <button disabled={!isAuth || isVoted} className={noBg} onClick={() => {
         dispatch({
@@ -185,11 +161,6 @@ function Issue({ issue }: {
             comment: 'no'
           }
         });
-        insertVote({
-          number: issue.number,
-          from: tonAddress,
-          comment: 'no'
-        })
       }}>{noVotes} No</button>}
     </div>
   </div>

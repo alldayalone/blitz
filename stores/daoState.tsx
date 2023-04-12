@@ -1,6 +1,6 @@
-import { createContext, useEffect, useReducer } from 'react';
-import { insertVote, getVotes } from '@/utils/mongoClient';
-
+import { createContext, useEffect, useReducer, useState } from 'react';
+import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
+import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
 
 export interface DaoState {
   proposals: {
@@ -30,6 +30,10 @@ export const initialState: DaoState = {
 function reducer(state: DaoState, action: DaoAction): DaoState {
   switch (action.type) {
     case 'turn_into_proposal': {
+      if (state.proposals.find((proposal) => proposal.number === action.payload.number)) {
+        return state;
+      }
+
       return {
         ...state,
         proposals: [
@@ -37,13 +41,16 @@ function reducer(state: DaoState, action: DaoAction): DaoState {
           { number: action.payload.number, transactions: [] }
         ]
       }
-
     }
     case 'vote': {
       return {
         ...state,
         proposals: state.proposals.map((proposal) => {
           if (proposal.number === action.payload.number) {
+            if (proposal.transactions.find((transaction) => transaction.from === action.payload.from)) {
+              return proposal;
+            }
+
             return {
               ...proposal,
               transactions: [
@@ -98,18 +105,20 @@ function reducer(state: DaoState, action: DaoAction): DaoState {
   }
 }
 
-// const initializer = () => (typeof window !== "undefined" && JSON.parse(localStorage.getItem('dao-state') ?? 'null')) || initialState;
-const initializer = () => initialState;
 export const DaoStateContext = createContext<DaoState>(initialState);
 export const DaoStateDispatchContext = createContext<React.Dispatch<DaoAction>>(() => {});
 
+/* CHOOSE PROVIDER */
+const votesProvider = new NapkinVoteProvider(); // persistent and shared using napkin.io
+// const votesProvider = new LocalStorageProvider();
+
 export function DaoStateProvider({ children }: { children: React.ReactNode }) {
-  const [daoState, dispatch] = useReducer(reducer, initialState, initializer);
+  const [loading, setLoading] = useState(true);
+  const [daoState, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     (async () => {
-
-      const votes: any[] = await getVotes();
+      const votes = await votesProvider.getVotes();
 
       // for each unique number, turn it into a proposal
       const numbers = [...new Set(votes.map((vote) => vote.number))];
@@ -120,16 +129,26 @@ export function DaoStateProvider({ children }: { children: React.ReactNode }) {
       votes.forEach((vote) => {
         dispatch({ type: 'vote', payload: vote });
       });
+
+      setLoading(false);
     })();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('dao-state', JSON.stringify(daoState));
-  }, [daoState]);
+  const dispatchWithSideEffects = async (action: DaoAction) => {
+    dispatch(action);
+
+    switch(action.type) {
+      case 'vote': {
+        await votesProvider.insertVote(action.payload);
+      }
+    }
+  }
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <DaoStateContext.Provider value={daoState}>
-      <DaoStateDispatchContext.Provider value={dispatch}>
+      <DaoStateDispatchContext.Provider value={dispatchWithSideEffects}>
         {children}
       </DaoStateDispatchContext.Provider>
     </DaoStateContext.Provider>
