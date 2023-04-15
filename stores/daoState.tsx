@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
 import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
-import { useRepo } from './repo';
+import { Repo } from './repo';
 
 export interface DaoState {
   proposals: {
@@ -111,15 +111,16 @@ export const DaoStateDispatchContext = createContext<React.Dispatch<DaoAction>>(
 
 
 
-export function DaoStateProvider({ children }: { children: React.ReactNode }) {
+export function DaoStateProvider({ children, repo }: { children: React.ReactNode, repo: Repo }) {
   const [loading, setLoading] = useState(true);
   const [daoState, dispatch] = useReducer(reducer, initialState);
-  const repo = useRepo();
 
   /* CHOOSE PROVIDER */
   const votesProvider = useMemo(() => {
-    return new NapkinVoteProvider(repo); // persistent and shared using napkin.io
-    // return new LocalStorageProvider(repo);
+    const repoNs = repo?.owner.login + '/' + repo?.name;
+
+    return new NapkinVoteProvider(repoNs); // persistent and shared using napkin.io
+    // return new LocalStorageProvider(repoNs);
   }, [repo]); 
 
   useEffect(() => {

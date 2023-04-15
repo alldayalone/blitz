@@ -1,7 +1,11 @@
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
+import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
+import octokit from '@/utils/octokit';
 
-const RepoContext = createContext<string>('');
+export type Repo = GetResponseDataTypeFromEndpointMethod<typeof octokit.rest.repos.get> | null;
+
+const RepoContext = createContext<Repo>(null);
 
 export const useRepo = () => {
   return useContext(RepoContext);
@@ -9,14 +13,23 @@ export const useRepo = () => {
 
 export const RepoProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const [repo, setRepo] = useState<string>('');
+  const [repo, setRepo] = useState<Repo>(null);
 
   useEffect(() => {
-    if (router.query.repo && !Array.isArray(router.query.repo)) {
-      setRepo(router.query.repo);
-    } else {
-      setRepo('theoberton/blitz');
+    async function fetchRepo() {
+      if (router.query.repo && !Array.isArray(router.query.repo)) {
+        const res = await octokit.rest.repos.get({
+          owner: router.query.repo.split('/')[0],
+          repo: router.query.repo.split('/')[1],
+        });
+
+        setRepo(res.data);
+      } else {
+        setRepo(null);
+      }
     }
+
+    fetchRepo();   
   }, [router.query.repo]);
 
   return (
