@@ -12,7 +12,7 @@ export function BuilderOnboarding() {
     <div className="flex flex-col gap-5">
       <h1 className="text-2xl">Welcome to the Blitz!</h1>
       <p className="text-lg">Let&apos;s setup your roadmap page.</p>
-      <p className="text-lg">We need to know what repository you want to use for your roadmap.</p>
+      <p className="text-lg">You need a public GitHub repo with some open issues</p>
       <p className="text-lg">Paste a link to your GitHub repository.</p>
       <div className="flex flex-col gap-5">
         <input type="text" onChange={(e) => {
