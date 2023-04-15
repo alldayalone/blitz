@@ -4,7 +4,7 @@ export class NapkinVoteProvider implements VoteProvider {
   url: URL;
 
   constructor(readonly repo: string) {
-    this.url = new URL('https://pasha.npkn.net/dao-store/');
+    this.url = new URL('https://pasha.npkn.net/blitz-store/');
     this.url.searchParams.append('repo', repo);
   }
 

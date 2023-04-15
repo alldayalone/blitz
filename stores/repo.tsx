@@ -15,7 +15,7 @@ export const RepoProvider = ({ children }: { children: React.ReactNode }) => {
     if (router.query.repo && !Array.isArray(router.query.repo)) {
       setRepo(router.query.repo);
     } else {
-      setRepo('theoberton/github-dao');
+      setRepo('theoberton/blitz');
     }
   }, [router.query.repo]);
 
