@@ -13,14 +13,14 @@ export function BuilderOnboarding() {
       <h1 className="text-2xl">Welcome to the Blitz!</h1>
       <p className="text-lg">Let&apos;s setup your roadmap page.</p>
       <p className="text-lg">We need to know what repository you want to use for your roadmap.</p>
-      <p className="text-lg">Paste a link to your repository.</p>
+      <p className="text-lg">Paste a link to your GitHub repository.</p>
       <div className="flex flex-col gap-5">
         <input type="text" onChange={(e) => {
           const link = e.target.value;
           const repo = link.split('/').slice(-2).join('/');
 
           router.push(`?repo=${repo}`);
-        }} placeholder="Paste a link to your repository" />
+        }} placeholder="github.com/theoberton/blitz" />
       </div>
       <p className="text-lg">You can also check <Link className='text-blue-600' href="/?repo=theoberton/blitz">our roadmap ( ^ ͜ʖ ^ )</Link></p>
     </div>
