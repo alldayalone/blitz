@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import Link from 'next/link';
+import splitbee from "@splitbee/web";
 
 // starting page for the builder
 // we need to onboard him to quickly setup his roadmap page
@@ -18,11 +19,13 @@ export function BuilderOnboarding() {
         <input type="text" onChange={(e) => {
           const link = e.target.value;
           const repo = link.split('/').slice(-2).join('/');
+          splitbee.track('Paste repo', { repo });
+
 
           router.push(`?repo=${repo}`);
         }} placeholder="github.com/theoberton/blitz" />
       </div>
-      <p className="text-lg">You can also check <Link className='text-blue-600' href="/?repo=theoberton/blitz">our roadmap ( ^ ͜ʖ ^ )</Link></p>
+      <p className="text-lg">You can also check <Link data-splitbee-event="Click roadmap" className='text-blue-600' href="/?repo=theoberton/blitz">our roadmap ( ^ ͜ʖ ^ )</Link></p>
     </div>
   )
 }
