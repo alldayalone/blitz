@@ -8,6 +8,7 @@ import { IssueList } from '@/components/IssueList';
 import { RepoTitle } from '@/components/RepoTitle';
 import { BuilderOnboarding } from '@/components/BuilderOnboarding';
 import { isLocalhost } from '@/utils/isLocalhost';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function useTonAddress() {
   return useIp();
@@ -30,16 +31,21 @@ function DevControlPanel() {
   )
 }
 
+// Create a client
+const queryClient = new QueryClient()
+
 export default function Home() {  
   return (
-    <RepoProvider>
-      <IpProvider>
-          <main className='w-[42rem] mx-auto mt-10'>
-            <Main />
-          </main>
-          <DevControlPanel />
-      </IpProvider>
-    </RepoProvider>
+    <QueryClientProvider client={queryClient}>
+      <RepoProvider>
+        <IpProvider>
+            <main className='w-[42rem] mx-auto mt-10'>
+              <Main />
+            </main>
+            <DevControlPanel />
+        </IpProvider>
+      </RepoProvider>
+    </QueryClientProvider>
   )
 }
 
