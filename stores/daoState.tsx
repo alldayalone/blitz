@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
 import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
 import { Repo } from './repo';
+import { isLocalhost } from '@/utils/isLocalhost';
 
 export interface DaoState {
   proposals: {
@@ -17,12 +18,11 @@ type Action<T extends string, P = void> = P extends void
   ? { type: T }
   : { type: T; payload: P }
 
-type TurnIntoProposalAction = Action<'turn_into_proposal', { number: number }>
 type VoteAction = Action<'vote', { number: number, from: string, comment: 'yes' | 'no' }>
 type ResetAction = Action<'reset'>
 type RevokeVotesAction = Action<'revoke_votes', { from: string }>
 type RandomizeAction = Action<'randomize'>
-export type DaoAction = TurnIntoProposalAction | VoteAction | ResetAction | RandomizeAction | RevokeVotesAction;
+export type DaoAction = VoteAction | ResetAction | RandomizeAction | RevokeVotesAction;
 
 export const initialState: DaoState = {
   proposals: []
@@ -30,23 +30,19 @@ export const initialState: DaoState = {
 
 function reducer(state: DaoState, action: DaoAction): DaoState {
   switch (action.type) {
-    case 'turn_into_proposal': {
-      if (state.proposals.find((proposal) => proposal.number === action.payload.number)) {
-        return state;
+    case 'vote': {
+      const proposals = [...state.proposals];
+
+      if (!proposals.find((proposal) => proposal.number === action.payload.number)) {
+        proposals.push({
+          number: action.payload.number,
+          transactions: []
+        });
       }
 
       return {
         ...state,
-        proposals: [
-          ...state.proposals,
-          { number: action.payload.number, transactions: [] }
-        ]
-      }
-    }
-    case 'vote': {
-      return {
-        ...state,
-        proposals: state.proposals.map((proposal) => {
+        proposals: proposals.map((proposal) => {
           if (proposal.number === action.payload.number) {
             if (proposal.transactions.find((transaction) => transaction.from === action.payload.from)) {
               return proposal;
@@ -119,19 +115,14 @@ export function DaoStateProvider({ children, repo }: { children: React.ReactNode
   const votesProvider = useMemo(() => {
     const repoNs = repo?.owner.login + '/' + repo?.name;
 
-    return new NapkinVoteProvider(repoNs); // persistent and shared using napkin.io
-    // return new LocalStorageProvider(repoNs);
+    return isLocalhost()
+      ? new LocalStorageProvider(repoNs)
+      : new NapkinVoteProvider(repoNs); // persistent and shared using napkin.io
   }, [repo]); 
 
   useEffect(() => {
     (async () => {
       const votes = await votesProvider.getVotes();
-
-      // for each unique number, turn it into a proposal
-      const numbers = [...new Set(votes.map((vote) => vote.number))];
-      numbers.forEach((number) => {
-        dispatch({ type: 'turn_into_proposal', payload: { number } });
-      });
 
       votes.forEach((vote) => {
         dispatch({ type: 'vote', payload: vote });

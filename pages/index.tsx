@@ -7,6 +7,7 @@ import { RepoProvider, useRepo } from '@/stores/repo';
 import { IssueList } from '@/components/IssueList';
 import { RepoTitle } from '@/components/RepoTitle';
 import { BuilderOnboarding } from '@/components/BuilderOnboarding';
+import { isLocalhost } from '@/utils/isLocalhost';
 
 function useTonAddress() {
   return useIp();
@@ -16,11 +17,8 @@ function DevControlPanel() {
   const dispatch = useContext(DaoStateDispatchContext);
   const tonAddress = useTonAddress();
 
-  if (!tonAddress) {
-    return null;
-  }
-
-  if (location.hostname !== 'localhost') return null;
+  if (!tonAddress) return null;
+  if (!isLocalhost()) return null;
 
   return (
     <div className='fixed grid top-5 right-5 gap-3 bg-slate-200 p-5'>
@@ -29,27 +27,6 @@ function DevControlPanel() {
       <button className='bg-white p-2' onClick={() => dispatch({ type: 'randomize' })}>Randomize</button>
       <button className='bg-white p-2' onClick={() => dispatch({ type: 'revoke_votes', payload: { from: tonAddress }})}>Revoke votes</button>
     </div>
-  )
-}
-
-function SetRepo() {
-  const router = useRouter()
-  function handleSubmit(e: any) {
-    // Prevent the browser from reloading the page
-    e.preventDefault();
-
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form) as any;
-    const formJson = Object.fromEntries(formData.entries())
-    router.push(`/?repo=${formJson.repo}`)
-  }
-
-  return (
-    <form className='flex gap-3 mb-10' method="post" onSubmit={handleSubmit}>
-      <input className='bg-white' name="repo" defaultValue='theoberton/blitz' />
-      <button className='bg-white p-2 border border-black'>Change repo</button>
-    </form>
   )
 }
 

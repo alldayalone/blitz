@@ -9,10 +9,13 @@ export function RepoTitle() {
 
   return (
     <div className="my-5">
-      <h1>
+      <h1 className="text-3xl">
         {repo.owner.login}/{repo.name}
       </h1>
-      <p>{repo.description}</p>
+      <div className="flex justify-between items-end">
+        <p>{repo.description}</p>
+        <a className="bg-white p-2" href={`https://github.com/${repo.owner.login}/${repo.name}/issues/new`} target="_blank">Propose</a>
+      </div>
     </div>
   );  
 }
