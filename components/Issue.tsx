@@ -31,14 +31,14 @@ export function Issue({ issue }: {
   })();
 
   const yesBg = (() => {
-    if (voteTransaction?.comment === 'yes') return 'bg-green-700';
+    if (voteTransaction?.comment === 'yes') return 'bg-green-600';
     if (voteTransaction?.comment === 'no') return 'bg-gray-200';
     return 'bg-green-400';
   })();
 
   const noBg = (() => {
     if (voteTransaction?.comment === 'yes') return 'bg-gray-200';
-    if (voteTransaction?.comment === 'no') return 'bg-red-700';
+    if (voteTransaction?.comment === 'no') return 'bg-red-600';
     return 'bg-red-400';
   })();
 
