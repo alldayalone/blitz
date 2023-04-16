@@ -12,9 +12,12 @@ export function RepoTitle() {
       <h1 className="text-3xl">
         {repo.owner.login}/{repo.name}
       </h1>
-      <div className="flex justify-between items-end">
-        <p>{repo.description}</p>
-        <a className="bg-white p-2" href={`https://github.com/${repo.owner.login}/${repo.name}/issues/new`} target="_blank">Propose</a>
+      <div className="flex items-end gap-3">
+        <p className="flex-grow">{repo.description}</p>
+        <a className="bg-white p-2" data-splitbee-event="Sponsor" href={`https://github.com/sponsors/${repo.owner.login}`} target="_blank">
+          ❤️ Sponsor
+        </a>
+        <a className="bg-white p-2" data-splitbee-event="Propose" href={`https://github.com/${repo.owner.login}/${repo.name}/issues/new`} target="_blank">Propose</a>
       </div>
     </div>
   );  
