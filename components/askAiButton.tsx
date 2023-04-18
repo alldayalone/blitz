@@ -50,6 +50,6 @@ export function AskAiButton() {
   }, [repo]);
 
   return (
-    <button disabled={isLoading} className={`${styles.btn}`} onClick={onClickHandler}>Ask AI{isLoading ? ' ...' : ''}</button>
+    <button disabled={isLoading} className={`${styles.btn}`} onClick={onClickHandler}>ask ai{isLoading ? ' ...' : ''}</button>
   )
 }

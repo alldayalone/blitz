@@ -55,7 +55,7 @@ export function Issue({ issue }: {
               comment: 'yes'
             }
           });
-        }}>{yesVotes} Yes</button>}
+        }}>{yesVotes} yes</button>}
         {tonAddress && <button disabled={!isAuth || isVoted} className={noBg} onClick={() => {
           dispatch({
             type: 'vote',
@@ -65,7 +65,7 @@ export function Issue({ issue }: {
               comment: 'no'
             }
           });
-        }}>{noVotes} No</button>}
+        }}>{noVotes} no</button>}
       </div>
     </div>
   )
