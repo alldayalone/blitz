@@ -12,18 +12,17 @@ export function BuilderOnboarding() {
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-2xl">Welcome to the Blitz!</h1>
-      <p className="text-lg">Let&apos;s setup your roadmap page.</p>
-      <p className="text-lg">You need a public GitHub repo with some open issues</p>
-      <p className="text-lg">Paste a link to your GitHub repository.</p>
+      <p className="text-muted">Let&apos;s setup your roadmap page. You need a public GitHub repo with some open issues</p>
+      <p className="text-muted">Paste a link to your GitHub repository.</p>
       <div className="flex flex-col gap-5">
-        <input type="text" onChange={(e) => {
+        <input className="bg-darkslategray placeholder-[#4c4f6b] py-3 px-4 rounded" type="text" onChange={(e) => {
           const link = e.target.value;
           const repo = link.split('/').slice(-2).join('/');
           splitbee.track('Paste repo', { repo });
 
 
           router.push(`?repo=${repo}`);
-        }} placeholder="github.com/theoberton/blitz" />
+        }} placeholder="https://github.com/theoberton/blitz" />
       </div>
       <p className="text-lg">You can also check <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/?repo=theoberton/blitz">our roadmap ( ^ ͜ʖ ^ )</Link></p>
     </div>

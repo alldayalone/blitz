@@ -29,7 +29,7 @@ export function IssueList() {
     return <p>{query.error as string}</p>
   }
   return (
-    <div className='flex flex-col gap-5'>
+    <div className='flex flex-col'>
       {query.data.map((issue) => <Issue key={issue.id} issue={issue} />)}
     </div>
   )
