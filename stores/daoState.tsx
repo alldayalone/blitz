@@ -3,6 +3,8 @@ import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
 import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
 import { Repo } from './repo';
 import { isLocalhost } from '@/utils/isLocalhost';
+import splitbee from '@splitbee/web';
+import { VoidProvider } from './vote-provider/VoidProvider';
 
 export interface DaoState {
   proposals: {
@@ -113,11 +115,11 @@ export function DaoStateProvider({ children, repo }: { children: React.ReactNode
 
   /* CHOOSE PROVIDER */
   const votesProvider = useMemo(() => {
-    const repoNs = repo?.owner.login + '/' + repo?.name;
+    if (!repo?.full_name) return new VoidProvider();
 
     return isLocalhost()
-      ? new LocalStorageProvider(repoNs)
-      : new NapkinVoteProvider(repoNs); // persistent and shared using napkin.io
+      ? new LocalStorageProvider(repo?.full_name)
+      : new NapkinVoteProvider(repo?.full_name); // persistent and shared using napkin.io
   }, [repo]); 
 
   useEffect(() => {
@@ -137,7 +139,8 @@ export function DaoStateProvider({ children, repo }: { children: React.ReactNode
 
     switch(action.type) {
       case 'vote': {
-        await votesProvider.insertVote(action.payload);
+        splitbee.track('vote', { repo: repo?.full_name, vote: action.payload.comment, proposalNumber: action.payload.number });
+        votesProvider.insertVote(action.payload);
       }
     }
   }
