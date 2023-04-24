@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
+import splitbee from '@splitbee/web';
 import octokit from '@/utils/octokit';
 
 export type Repo = GetResponseDataTypeFromEndpointMethod<typeof octokit.rest.repos.get> | null;
@@ -24,6 +25,7 @@ export const RepoProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setRepo(res.data);
+        splitbee.track('repo', { repo: res.data?.full_name });
       } else {
         setRepo(null);
       }

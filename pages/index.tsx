@@ -1,23 +1,19 @@
 import { useContext } from 'react'
 
 import { DaoStateDispatchContext, DaoStateProvider } from '@/stores/daoState';
-import { IpProvider, useIp } from '@/stores/ip';
 import { useRepo } from '@/stores/repo';
 import { IssueList } from '@/components/IssueList';
 import { RepoTitle } from '@/components/RepoTitle';
 import { BuilderOnboarding } from '@/components/BuilderOnboarding';
 import { isLocalhost } from '@/utils/isLocalhost';
 import Button from '@/components/Button';
-
-function useTonAddress() {
-  return useIp();
-}
+import { useBlitzId } from '@/stores/blitzId';
 
 function DevControlPanel() {
   const dispatch = useContext(DaoStateDispatchContext);
-  const tonAddress = useTonAddress();
+  const blitzId = useBlitzId();
 
-  if (!tonAddress) return null;
+  if (!blitzId) return null;
   if (!isLocalhost()) return null;
 
   return (
@@ -25,19 +21,19 @@ function DevControlPanel() {
       <div className='w-max'>Dev Control Panel</div>
       <Button onClick={() => dispatch({ type: 'reset' })}>reset state</Button>
       <Button onClick={() => dispatch({ type: 'randomize' })}>randomize</Button>
-      <Button onClick={() => dispatch({ type: 'revoke_votes', payload: { from: tonAddress }})}>revoke votes</Button>
+      <Button onClick={() => dispatch({ type: 'revoke_votes', payload: { from: blitzId }})}>revoke votes</Button>
     </div>
   )
 }
 
 export default function Home() {  
   return (
-    <IpProvider>
+      <>
         <main className='w-[42rem] mx-auto mt-10'>
           <Main />
         </main>
         {/* <DevControlPanel /> */}
-    </IpProvider>
+      </>
   )
 }
 
