@@ -1,7 +1,7 @@
 import { createContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
 import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
-import { Repo } from './repo';
+import { useRepo } from './repo';
 import { isLocalhost } from '@/utils/isLocalhost';
 import splitbee from '@splitbee/web';
 import { VoidProvider } from './vote-provider/VoidProvider';
@@ -109,17 +109,18 @@ export const DaoStateDispatchContext = createContext<React.Dispatch<DaoAction>>(
 
 
 
-export function DaoStateProvider({ children, repo }: { children: React.ReactNode, repo: Repo }) {
+export function DaoStateProvider({ children }: { children: React.ReactNode }) {
+  const repo = useRepo();
   const [loading, setLoading] = useState(true);
   const [daoState, dispatch] = useReducer(reducer, initialState);
 
   /* CHOOSE PROVIDER */
   const votesProvider = useMemo(() => {
-    if (!repo?.full_name) return new VoidProvider();
+    if (!repo) return new VoidProvider();
 
     return isLocalhost()
-      ? new LocalStorageProvider(repo?.full_name)
-      : new NapkinVoteProvider(repo?.full_name); // persistent and shared using napkin.io
+      ? new LocalStorageProvider(repo.nameWithOwner)
+      : new NapkinVoteProvider(repo.nameWithOwner); // persistent and shared using napkin.io
   }, [repo]); 
 
   useEffect(() => {
@@ -139,7 +140,7 @@ export function DaoStateProvider({ children, repo }: { children: React.ReactNode
 
     switch(action.type) {
       case 'vote': {
-        splitbee.track('vote', { repo: repo?.full_name, vote: action.payload.comment, proposalNumber: action.payload.number });
+        splitbee.track('vote', { repo: repo?.nameWithOwner, vote: action.payload.comment, proposalNumber: action.payload.number });
         votesProvider.insertVote(action.payload);
       }
     }

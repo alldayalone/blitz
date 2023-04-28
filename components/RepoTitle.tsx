@@ -9,6 +9,25 @@ export function RepoTitle() {
     return null;
   }
 
+  const propose = async () => {
+    const mutation = "propose";
+    const title = prompt("what's your idea?");
+    const body = title;
+    const repositoryId = repo.id;
+    const categoryId = (repo.discussionCategories.nodes.find(c => c.name === 'Ideas') ?? repo.discussionCategories.nodes[0]).id;
+
+    const result = await fetch(`https://pasha.npkn.net/blitz-issues/${repo.nameWithOwner}`, {
+      method: 'POST',
+      body: JSON.stringify({ mutation, title, body, repositoryId, categoryId }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(res => res.json());
+
+    alert("yep, i see. lemme put it in the roadmap")
+    console.log(result);
+  }
+
   return (
     <div className="my-5">
       <div className="flex items-start mb-4">
@@ -27,7 +46,7 @@ export function RepoTitle() {
         </div>
 
         <div className="flex-shrink-0">
-          <Button as="a" data-splitbee-event="propose" href={`https://github.com/${repo.owner.login}/${repo.name}/issues/new`} target="_blank">
+          <Button data-splitbee-event="propose" onClick={propose} target="_blank">
             propose
           </Button>
       </div>

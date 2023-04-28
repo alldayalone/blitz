@@ -1,38 +1,56 @@
-import { useRouter } from "next/router";
-import { createContext, useContext, useEffect, useState } from "react";
-import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import splitbee from '@splitbee/web';
-import octokit from '@/utils/octokit';
 
-export type Repo = GetResponseDataTypeFromEndpointMethod<typeof octokit.rest.repos.get> | null;
+export type Repo = {
+  id: number;
+  nameWithOwner: string
+  name: string
+  description: string | null
+  owner: {
+    login: string
+  }
+  discussionCategories: {
+    nodes: {
+      id: string
+      name: string
+    }[]
+  }
+  discussions: {
+    nodes: {
+      number: number
+      title: string
+      category: {
+        id: string
+      }
+    }[] 
+  }
+}
 
-const RepoContext = createContext<Repo>(null);
+const RepoContext = createContext<Repo | null>(null);
 
 export const useRepo = () => {
   return useContext(RepoContext);
 }
 
-export const RepoProvider = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter();
-  const [repo, setRepo] = useState<Repo>(null);
+export const RepoProvider: React.FC<PropsWithChildren<{ repoName: string }>> = ({ children, repoName }) => {
+  const [repo, setRepo] = useState<Repo | null>(null);
 
   useEffect(() => {
     async function fetchRepo() {
-      if (router.query.repo && !Array.isArray(router.query.repo)) {
-        const res = await octokit.rest.repos.get({
-          owner: router.query.repo.split('/')[0],
-          repo: router.query.repo.split('/')[1],
-        });
-
-        setRepo(res.data);
-        splitbee.track('repo', { repo: res.data?.full_name });
-      } else {
+      if (!repoName) {
         setRepo(null);
+        return;
       }
+
+      const data: { repository: Repo } = await fetch(`https://pasha.npkn.net/blitz-issues/${repoName}`).then(res => res.json());
+      console.log(data)
+      setRepo(data.repository);
+
+      splitbee.track('repo', { repo: data.repository.nameWithOwner });
     }
 
     fetchRepo();   
-  }, [router.query.repo]);
+  }, [repoName]);
 
   return (
     <RepoContext.Provider value={repo}>

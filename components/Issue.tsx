@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import { useBlitzId } from '@/stores/blitzId';
 
 export function Issue({ issue }: {
-  issue: GetResponseDataTypeFromEndpointMethod<typeof octokit.rest.issues.listForRepo>[number],
+  issue: { number: number; title: string}
 }) {
   const daoState = useContext(DaoStateContext);
   const dispatch = useContext(DaoStateDispatchContext);

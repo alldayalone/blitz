@@ -27,9 +27,7 @@ const Button = <T extends React.ElementType>({ children, color = 'default', size
   }
 
   return (
-    <div className={`flex items-center justify-center border rounded ${colorClass[color]} ${sizeClass[size]}`}>
-      <Component {...rest}>{children}</Component>
-    </div>
+    <Component className={`flex items-center justify-center border rounded max-w-[16rem] ${colorClass[color]} ${sizeClass[size]}`} {...rest}>{children}</Component>
   )
 }
 

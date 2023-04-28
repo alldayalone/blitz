@@ -1,54 +1,35 @@
-import { useContext } from 'react'
+import { useRouter } from "next/router";
+import Link from 'next/link';
+import splitbee from "@splitbee/web";
+import { Layout } from '@/components/Layout';
+import Button from "@/components/Button";
 
-import { DaoStateDispatchContext, DaoStateProvider } from '@/stores/daoState';
-import { useRepo } from '@/stores/repo';
-import { IssueList } from '@/components/IssueList';
-import { RepoTitle } from '@/components/RepoTitle';
-import { BuilderOnboarding } from '@/components/BuilderOnboarding';
-import { isLocalhost } from '@/utils/isLocalhost';
-import Button from '@/components/Button';
-import { useBlitzId } from '@/stores/blitzId';
-
-function DevControlPanel() {
-  const dispatch = useContext(DaoStateDispatchContext);
-  const blitzId = useBlitzId();
-
-  if (!blitzId) return null;
-  if (!isLocalhost()) return null;
+const BuilderOnboarding = () => {  
+  const router = useRouter();
 
   return (
-    <div className='fixed grid top-5 right-5 gap-3 bg-slate-200 p-5'>
-      <div className='w-max'>Dev Control Panel</div>
-      <Button onClick={() => dispatch({ type: 'reset' })}>reset state</Button>
-      <Button onClick={() => dispatch({ type: 'randomize' })}>randomize</Button>
-      <Button onClick={() => dispatch({ type: 'revoke_votes', payload: { from: blitzId }})}>revoke votes</Button>
-    </div>
+    <Layout>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-3xl mb-5">setup your public roadmap in 5 mins 😏</h1>
+        <p className="text-muted">do you have a public github repo? just paste a link!</p>
+        <div className="flex flex-col gap-5 mb-8">
+          <input className="bg-darkslategray placeholder-[#4c4f6b] py-3 px-4 rounded" type="text" onChange={(e) => {
+            const link = e.target.value;
+            const repo = link.split('/').slice(-2).join('/');
+            splitbee.track('Paste repo', { repo });
+
+            router.push(`/r/${repo}`);
+          }} placeholder="https://github.com/theoberton/blitz" />
+        </div>
+        <p className="text-muted">have a <b>private</b> repo? go install the github app and come back</p>
+        <div className="mb-8">
+          <Button as="a" href="https://github.com/apps/blitzmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
+        </div>
+        
+        <p className="text-muted">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r/theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
+      </div>
+    </Layout>
   )
 }
 
-export default function Home() {  
-  return (
-      <>
-        <main className='w-[42rem] mx-auto mt-10'>
-          <Main />
-        </main>
-        {/* <DevControlPanel /> */}
-      </>
-  )
-}
-
-function Main() {
-  const repo = useRepo();
- 
-  if (!repo) {
-    return <BuilderOnboarding />;
-  }
-
-  return (
-    <DaoStateProvider repo={repo}>
-      <RepoTitle />
-      <IssueList />
-    </DaoStateProvider>
-  );
-}
-
+export default BuilderOnboarding;

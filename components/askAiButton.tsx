@@ -13,7 +13,7 @@ export function AskAiButton() {
 
     setIsLoading(true);
     try {
-      const readme = await fetch(`https://raw.githubusercontent.com/${repo.full_name}/main/README.md`).then(res => res.text());
+      const readme = await fetch(`https://raw.githubusercontent.com/${repo.nameWithOwner}/main/README.md`).then(res => res.text());
       const issues = await octokit.rest.issues.listForRepo({
         owner: repo.owner.login,
         repo: repo.name,
