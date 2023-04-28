@@ -9,7 +9,12 @@ function RoadmapPage() {
     return null;
   }
 
-  return <Layout><Roadmap repoName={router.query.owner + "/" + router.query.repo} /></Layout>
+  if (!router.query.repo || Array.isArray(router.query.repo)) {
+    router.push('/');
+    return null;
+  }
+
+  return <Layout><Roadmap repoName={router.query.repo} /></Layout>
 }
 
 export default RoadmapPage;

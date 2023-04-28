@@ -18,7 +18,7 @@ const BuilderOnboarding = () => {
             const repo = link.split('/').slice(-2).join('/');
             splitbee.track('Paste repo', { repo });
 
-            router.push(`/r/${repo}`);
+            router.push(`/r?repo=${repo}`);
           }} placeholder="https://github.com/theoberton/blitz" />
         </div>
         <p className="text-muted">have a <b>private</b> repo? install the github app and come back</p>
@@ -26,7 +26,7 @@ const BuilderOnboarding = () => {
           <Button as="a" href="https://github.com/apps/blitzmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
         </div>
         
-        <p className="text-muted">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r/theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
+        <p className="text-muted">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r?repo=theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
       </div>
     </Layout>
   )
