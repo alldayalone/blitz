@@ -1,6 +1,4 @@
 import { useContext } from 'react'
-import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types'
-import octokit from '@/utils/octokit'
 import { DaoStateDispatchContext, DaoStateContext } from '@/stores/daoState';
 
 import Button from '@/components/Button';
@@ -31,9 +29,9 @@ export function Issue({ issue }: {
   });
   
   return (
-    <div className={`flex justify-between items-center h-11 text-sm gap-2 border-b border-[#212234]`}>
-      <h3 className='text-ellipsis whitespace-nowrap overflow-hidden'>#{issue.number} {issue.title}</h3>
-      {isAuth && <div className='flex-shrink-0 flex gap-3'>
+    <div className={`flex flex-wrap justify-end items-center min-h-11 py-2 gap-3 text-sm border-b border-[#212234]`}>
+      <h3 className="flex-grow"><span className="text-muted">#{issue.number}</span> {issue.title}</h3>
+      <div className='flex-shrink-0 flex gap-3'>
         <Button
           disabled={isVoted}
           color={isVoted && voteTransaction?.comment === 'yes' ? 'green' : 'default'}
@@ -46,7 +44,7 @@ export function Issue({ issue }: {
           size="small"
           onClick={voteHandler('no')}
         >{noVotes} no</Button>
-      </div>}
+      </div>
     </div>
   )
 }

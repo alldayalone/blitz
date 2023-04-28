@@ -1,6 +1,6 @@
 import { useRepo } from "@/stores/repo";
-import { AskAiButton } from "./askAiButton";
 import Button from "@/components/Button";
+import { AskAiButton } from "./askAiButton";
 
 export function RepoTitle() {
   const repo = useRepo();
@@ -12,6 +12,8 @@ export function RepoTitle() {
   const propose = async () => {
     const mutation = "propose";
     const title = prompt("what's your idea?");
+    if (!title) return;
+
     const body = title;
     const repositoryId = repo.id;
     const categoryId = (repo.discussionCategories.nodes.find(c => c.name === 'Ideas') ?? repo.discussionCategories.nodes[0]).id;
@@ -29,29 +31,23 @@ export function RepoTitle() {
   }
 
   return (
-    <div className="my-5">
-      <div className="flex items-start mb-4">
-        <h1 className="flex-grow text-3xl">
-          {repo.owner.login}/{repo.name}
-        </h1>
-        <AskAiButton />
-      </div>
-     
-      <div className="flex items-end gap-3">
-        <p className="flex-grow text-muted">{repo.description}</p>
-        <div className="flex-shrink-0">
-          <Button as="a" data-splitbee-event="sponsor" href={`https://github.com/sponsors/${repo.owner.login}`} target="_blank">
-            ❤️ sponsor
-          </Button>
-        </div>
+    <div className="my-5 flex flex-wrap justify-end gap-4">
+      <h1 className="order-1 basis-full xs:basis-1/2 flex-grow text-3xl">
+        {repo.owner.login}/{repo.name}
+      </h1>
+      <Button className="order-3 xs:order-2" color="fancy" size="large" data-splitbee-event="propose" onClick={propose} target="_blank">
+        propose
+      </Button>
+      
 
-        <div className="flex-shrink-0">
-          <Button data-splitbee-event="propose" onClick={propose} target="_blank">
-            propose
-          </Button>
-      </div>
-       
-       
+      <p className="order-2 xs:order-3 flex-grow text-muted">{repo.description}</p>
+
+      <div className="order-4 flex-shrink-0 flex flex-wrap gap-4 w-full xs:w-auto">
+        <Button as="a" data-splitbee-event="sponsor" href={`https://github.com/sponsors/${repo.owner.login}`} target="_blank">
+          ❤️ sponsor
+        </Button>
+        <AskAiButton />
+        
       </div>
     </div>
   );  

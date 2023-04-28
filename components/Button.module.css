@@ -1,4 +1,4 @@
-.btn {
+.fancyBtn {
   position: relative;
   display: flex;
 
@@ -17,7 +17,7 @@
   transition: background-color .2s;
 }
 
-.btn:before {
+.fancyBtn:before {
   position: absolute;
   z-index: -1;
   top: 5px;

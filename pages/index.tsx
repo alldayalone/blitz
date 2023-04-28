@@ -12,7 +12,7 @@ const BuilderOnboarding = () => {
       <div className="flex flex-col gap-5">
         <h1 className="text-3xl mb-5">setup your public roadmap in 5 mins 😏</h1>
         <p className="text-muted">do you have a public github repo? just paste a link!</p>
-        <div className="flex flex-col gap-5 mb-8">
+        <div className="flex flex-col gap-5 mb-12">
           <input className="bg-darkslategray placeholder-[#4c4f6b] py-3 px-4 rounded" type="text" onChange={(e) => {
             const link = e.target.value;
             const repo = link.split('/').slice(-2).join('/');
@@ -21,8 +21,8 @@ const BuilderOnboarding = () => {
             router.push(`/r/${repo}`);
           }} placeholder="https://github.com/theoberton/blitz" />
         </div>
-        <p className="text-muted">have a <b>private</b> repo? go install the github app and come back</p>
-        <div className="mb-8">
+        <p className="text-muted">have a <b>private</b> repo? install the github app and come back</p>
+        <div className="mb-12 max-w-[16rem]">
           <Button as="a" href="https://github.com/apps/blitzmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
         </div>
         

@@ -1,7 +1,7 @@
 import { useRepo } from "@/stores/repo";
 import octokit from "@/utils/octokit";
 import { useCallback, useState } from "react"
-import styles from './askAiButton.module.css';
+import Button from "./Button";
 
 export function AskAiButton() {
   const repo = useRepo();
@@ -50,6 +50,6 @@ export function AskAiButton() {
   }, [repo]);
 
   return (
-    <button disabled={isLoading} className={`${styles.btn}`} onClick={onClickHandler}>ask ai{isLoading ? ' ...' : ''}</button>
+    <Button disabled={isLoading} onClick={onClickHandler}>ask ai{isLoading ? ' ...' : ''}</Button>
   )
 }

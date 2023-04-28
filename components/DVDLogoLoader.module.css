@@ -1,0 +1,20 @@
+.logo {
+  position: absolute;
+  animation: moveX 15s linear var(--dvd-move-x) infinite alternate, moveY 30s linear var(--dvd-move-y) infinite alternate;
+}
+
+@keyframes moveX {
+  0% { left: 0; }
+  25% { left: calc(100vw - 125px) }
+  50% { left: 0; }
+  75% { left: calc(100vw - 125px) }
+  100% { left: 0; }
+}
+
+@keyframes moveY {
+  0% { top: 0; }
+  25% { top: calc(100vh - 65px) }
+  50% { top: 0; }
+  75% { top: calc(100vh - 65px) }
+  100% { top: 0; }
+}

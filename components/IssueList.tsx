@@ -15,7 +15,7 @@ export function IssueList() {
   }
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col gap-2'>
       {repo.discussions.nodes.map((issue) => <Issue key={issue.number} issue={issue} />)}
     </div>
   )

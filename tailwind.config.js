@@ -11,7 +11,10 @@ module.exports = {
         'dark-blue': '#191a23',
         darkslategray: '#1f2130',
         muted: '#848699'
-      }
+      },
+      screens: {
+        'xs': '480px',
+      },
     },
   },
   plugins: [],
