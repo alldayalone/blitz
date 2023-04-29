@@ -30,7 +30,9 @@ const BuilderOnboarding = () => {
         
         <p className="text-muted mb-12">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r?repo=theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
 
-        <Image width="150" src={pashaPhoto} alt="author photo" className="absolute bottom-[-120px] left-1/2 translate-x-[-75px] sm:bottom-0 sm:left-full sm:translate-x-[-150px]" />
+        <a href="https://youtu.be/StHVi2jFzlI" target="_blank" className="w-[150px] hover:scale-105 transition absolute bottom-[-120px] left-1/2 translate-x-[-75px] sm:bottom-0 sm:left-full sm:translate-x-[-150px]" >
+          <Image width="150" src={pashaPhoto} alt="author photo" />
+        </a>
       </div>
     </Layout>
   )
