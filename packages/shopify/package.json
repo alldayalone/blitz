@@ -1,0 +1,31 @@
+{
+  "name": "@theoberton/blitz-shopify",
+  "version": "0.0.11",
+  "description": "Shopify-styled blitz roadmap",
+  "exports": {
+    ".": {
+      "import": "./dist/main.mjs",
+      "require": "./dist/main.js"
+    }
+  },
+  "main": "./dist/main.js",
+  "module": "./dist/main.mjs",
+  "typings": "./dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "build:watch": "tsc && vite build --watch",
+    "dev": "vite"
+  },
+  "author": "Pasha Kaluhin @alldayalone",
+  "license": "ISC",
+  "dependencies": {
+    "@theoberton/blitz-core": "^0.0.11"
+  },
+  "peerDependencies": {
+    "@shopify/polaris": "^10.49.1",
+    "react": "^18.2.0"
+  }
+}

@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { Roadmap } from "@/components/Roadmap";
 import { useRouter } from "next/router";
+import splitbee from '@splitbee/web';
 
 function RoadmapPage() {
   const router = useRouter();
@@ -13,6 +14,8 @@ function RoadmapPage() {
     router.push('/');
     return null;
   }
+
+  splitbee.track('repo', { repo: router.query.repo });
 
   return <Layout><Roadmap repoName={router.query.repo} /></Layout>
 }

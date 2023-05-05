@@ -1,17 +1,17 @@
-import { createContext, useEffect, useMemo, useReducer, useState } from 'react';
-import { NapkinVoteProvider } from '@/stores/vote-provider/NapkinVoteProvider';
-import { LocalStorageProvider } from '@/stores/vote-provider/LocalStorageProvider';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
+import { NapkinVoteProvider, LocalStorageProvider, VoidProvider, Vote } from './vote-provider';
 import { useRepo } from './repo';
-import { isLocalhost } from '@/utils/isLocalhost';
-import splitbee from '@splitbee/web';
-import { VoidProvider } from './vote-provider/VoidProvider';
+
+function isLocalhost() {
+  return window.location.hostname === 'localhost';
+}
 
 export interface DaoState {
   proposals: {
     number: number
     transactions: {
       from: string
-      comment: 'yes' | 'no'
+      comment: Vote['comment']
     }[]
   }[]
 }
@@ -20,7 +20,7 @@ type Action<T extends string, P = void> = P extends void
   ? { type: T }
   : { type: T; payload: P }
 
-type VoteAction = Action<'vote', { number: number, from: string, comment: 'yes' | 'no' }>
+type VoteAction = Action<'vote', { number: number, from: string, comment: Vote['comment'] }>
 type ResetAction = Action<'reset'>
 type RevokeVotesAction = Action<'revoke_votes', { from: string }>
 type RandomizeAction = Action<'randomize'>
@@ -46,10 +46,6 @@ function reducer(state: DaoState, action: DaoAction): DaoState {
         ...state,
         proposals: proposals.map((proposal) => {
           if (proposal.number === action.payload.number) {
-            if (proposal.transactions.find((transaction) => transaction.from === action.payload.from)) {
-              return proposal;
-            }
-
             return {
               ...proposal,
               transactions: [
@@ -110,7 +106,7 @@ export const DaoStateDispatchContext = createContext<React.Dispatch<DaoAction>>(
 
 
 export function DaoStateProvider({ children }: { children: React.ReactNode }) {
-  const repo = useRepo();
+  const { repo } = useRepo();
   const [loading, setLoading] = useState(true);
   const [daoState, dispatch] = useReducer(reducer, initialState);
 
@@ -140,7 +136,6 @@ export function DaoStateProvider({ children }: { children: React.ReactNode }) {
 
     switch(action.type) {
       case 'vote': {
-        splitbee.track('vote', { repo: repo?.nameWithOwner, vote: action.payload.comment, proposalNumber: action.payload.number });
         votesProvider.insertVote(action.payload);
       }
     }
@@ -155,4 +150,38 @@ export function DaoStateProvider({ children }: { children: React.ReactNode }) {
       </DaoStateDispatchContext.Provider>
     </DaoStateContext.Provider>
   );
+}
+
+export function useVoteHandler({ voterUid, proposalNumber }: { voterUid: string, proposalNumber: number }) {
+  const dispatch = useContext(DaoStateDispatchContext);
+  const voteHandler = useCallback((comment: Vote['comment']) => () => dispatch({
+    type: 'vote',
+    payload: {
+      number: proposalNumber,
+      from: voterUid,
+      comment,
+    }
+  }), [dispatch, voterUid, proposalNumber]);
+
+  return voteHandler;
+}
+
+export function useProposal({ voterUid, proposalNumber }: { voterUid: string, proposalNumber: number }) {
+  const daoState = useContext(DaoStateContext);
+  const proposal = daoState.proposals.find((proposal) => proposal.number === proposalNumber);
+  const votes = proposal?.transactions ?? [];
+
+  const voteTransaction = votes.find((transaction) => transaction.from === voterUid); // fixme: should be findlast
+  const votesCount = votes.reduceRight((memo, tx) => {
+    if (!memo.voters[tx.from]) {
+      memo[tx.comment] += 1;
+      memo.voters[tx.from] = true;
+    }
+
+    return memo;
+  }, { yes: 0, no: 0, none: 0, voters: {} as Record<string, boolean> });
+  return {
+    currentVote: voteTransaction?.comment,
+    votesCount
+  };
 }

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Link from 'next/link';
 import splitbee from "@splitbee/web";
 import { Layout } from '@/components/Layout';
-import Button from "@/components/Button";
+import { Button } from "@/components/Button";
 import pashaPhoto from '@/public/pasha_photo.png';
 import Image from "next/image";
 

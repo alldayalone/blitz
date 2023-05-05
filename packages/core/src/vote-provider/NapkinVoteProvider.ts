@@ -10,7 +10,7 @@ export class NapkinVoteProvider implements VoteProvider {
 
   async getVotes(): Promise<Vote[]> {
     try {
-      const res = await fetch(this.url);
+      const res = await fetch(this.url.toString());
       const votes = await res.json();
       
       if (!votes || !Array.isArray(votes)) throw new Error('Invalid response');
@@ -24,7 +24,7 @@ export class NapkinVoteProvider implements VoteProvider {
   }
 
   async insertVote(vote: Vote): Promise<void> {
-    await fetch(this.url, {
+    await fetch(this.url.toString(), {
       method: 'POST', 
       body: JSON.stringify(vote), 
       headers: {

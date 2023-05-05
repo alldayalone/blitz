@@ -1,6 +1,6 @@
 export interface Vote {
   number: number;
-  comment: 'yes' | 'no';
+  comment: 'yes' | 'no' | 'none';
   from: string;
 }
 

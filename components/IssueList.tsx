@@ -1,4 +1,4 @@
-import { useRepo } from "@/stores/repo";
+import { useRepo } from "@theoberton/blitz-core";
 import { Issue } from "./Issue";
 
 type Issue = {
@@ -8,7 +8,7 @@ type Issue = {
 }
 
 export function IssueList() {
-  const repo = useRepo();
+  const { repo } = useRepo();
 
   if (!repo) {
     return null;
