@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@theoberton/blitz-core@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.11.tgz#90cc2afc45166cdd260a8f26a5bc687c86e18a2f"
-  integrity sha512-/yBhwpVRCh1xdR5LJWB9//jVcuYCwFNILRatNozTZTXDLhdnTx+0bTuAwa8tEQvqHtX8RHYuSwe0HATtGoPB2Q==
+"@theoberton/blitz-core@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.12.tgz#186e26199b2ad69ba36f3bbe14dfd0c74bef591c"
+  integrity sha512-vqmq0wZM1amWSG9jQ+VWP6+kwKEI+bKCS5w1s7PhP53p9Pu14zg/Fa7rb06Q2M1hDRqRo13a4SWeHGLNnQEJ1A==

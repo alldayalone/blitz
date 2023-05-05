@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@shopify/polaris';
 
-import { RepoProvider, useRepo, DaoStateProvider, useProposal, useVoteHandler, useMakeProposal  } from '@theoberton/blitz-core';
+import { RepoProvider, useRepo, DaoStateProvider, useProposal, useVoteHandler, useMakeProposal, useBlitzId  } from '@theoberton/blitz-core';
 
 function ShopifyIssue({ issue, userId }: {issue: { number: number; title: string}, userId: string }) {
   const voteHandler = useVoteHandler({ voterUid: userId, proposalNumber: issue.number });
@@ -164,7 +164,7 @@ export type ShopifyRoadmapProps = {
 }
 
 export const ShopifyRoadmap: React.FC<ShopifyRoadmapProps> = ({ repoName, ...rest }) => {
-  const userId = rest.userId || 'sos';
+  const userId = useBlitzId(rest.userId);
   const headerContent = rest.headerContent || "What should I build next?";
   return (
     <RepoProvider repoName={repoName}>

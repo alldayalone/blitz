@@ -1,6 +1,5 @@
 import { Button } from '@/components/Button';
-import { useVoteHandler, useProposal } from '@theoberton/blitz-core';
-import { useBlitzId } from '@/stores/blitzId';
+import { useVoteHandler, useProposal, useBlitzId } from '@theoberton/blitz-core';
 
 export function Issue({ issue }: {
   issue: { number: number; title: string}

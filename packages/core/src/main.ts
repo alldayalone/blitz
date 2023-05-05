@@ -10,3 +10,4 @@ declare global {
 export * from './repo';
 export * from './daoState';
 export * from './vote-provider';
+export * from './blitzId';
