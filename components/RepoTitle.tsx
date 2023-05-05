@@ -1,30 +1,20 @@
-import { useRepo } from "@/stores/repo";
-import Button from "@/components/Button";
-import { AskAiButton } from "./askAiButton";
+import { useRepo, useMakeProposal } from "@theoberton/blitz-core";
+import { Button } from "@/components/Button";
+import { AskAiButton } from "@/components/askAiButton";
 
 export function RepoTitle() {
-  const repo = useRepo();
+  const makeProposal = useMakeProposal();
+  const { repo } = useRepo();
 
   if (!repo) {
     return null;
   }
 
   const propose = async () => {
-    const mutation = "propose";
     const title = prompt("what's your idea?");
     if (!title) return;
 
-    const body = title;
-    const repositoryId = repo.id;
-    const categoryId = (repo.discussionCategories.nodes.find(c => c.name === 'Ideas') ?? repo.discussionCategories.nodes[0]).id;
-
-    const result = await fetch(`https://pasha.npkn.net/blitz-issues/${repo.nameWithOwner}`, {
-      method: 'POST',
-      body: JSON.stringify({ mutation, title, body, repositoryId, categoryId }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(res => res.json());
+    const result = await makeProposal({ oneliner: title, description: '.' })
 
     alert("yep, i see. lemme put it in the roadmap")
     console.log(result);

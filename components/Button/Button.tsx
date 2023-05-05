@@ -29,12 +29,10 @@ type ButtonProps<E extends ElementType = "button"> = PolymorphicProps<E> & {
   className?: string;
 };
 
-const Button = <T extends React.ElementType>({ children, as, color = 'default', size = 'medium', className = '', ...rest }: ButtonProps<T>) => {
+export const Button = <T extends React.ElementType>({ children, as, color = 'default', size = 'medium', className = '', ...rest }: ButtonProps<T>) => {
   const Component = as ?? "button";
 
   return (
     <Component className={`flex items-center justify-center border rounded w-full xs:w-auto ${colorClass[color]} ${sizeClass[size]} ${className}`} {...rest}>{children}</Component>
   )
 }
-
-export default Button;

@@ -1,12 +1,11 @@
 import { IssueList } from "@/components/IssueList";
 import { RepoTitle } from "@/components/RepoTitle";
-import { DaoStateProvider } from "@/stores/daoState";
-import { RepoProvider, useRepo} from "@/stores/repo";
-import { DVDLogoLoader } from "./DVDLogoLoader";
+import { DVDLogoLoader } from "@/components/DVDLogoLoader";
+import { DaoStateProvider, RepoProvider, useRepo } from "@theoberton/blitz-core";
 import { useEffect, useState } from "react";
 
 const Internal = () => {
-  const repo = useRepo();
+  const { repo } = useRepo();
   const [isReady, setReady] = useState(false);
 
 
@@ -19,10 +18,10 @@ const Internal = () => {
   }
 
   return (
-    <>
+    <div className="bg-dark-blue">
       <RepoTitle />
       <IssueList />
-    </>
+    </div>
   )
 }
 

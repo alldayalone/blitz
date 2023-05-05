@@ -1,10 +1,10 @@
-import { useRepo } from "@/stores/repo";
-import octokit from "@/utils/octokit";
 import { useCallback, useState } from "react"
-import Button from "./Button";
+import { useRepo } from "@theoberton/blitz-core";
+import octokit from "@/utils/octokit";
+import { Button } from "@/components/Button";
 
 export function AskAiButton() {
-  const repo = useRepo();
+  const { repo } = useRepo();
 
   const [isLoading, setIsLoading] = useState(false);
 
