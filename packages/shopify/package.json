@@ -1,6 +1,6 @@
 {
   "name": "@theoberton/blitz-shopify",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Shopify-styled blitz roadmap",
   "exports": {
     ".": {
@@ -22,7 +22,7 @@
   "author": "Pasha Kaluhin @alldayalone",
   "license": "ISC",
   "dependencies": {
-    "@theoberton/blitz-core": "^0.0.14"
+    "@theoberton/blitz-core": "^0.0.16"
   },
   "peerDependencies": {
     "@shopify/polaris": "^10.49.1",
