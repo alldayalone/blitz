@@ -2,7 +2,7 @@
   "name": "@theoberton/blitz-core",
   "description": "Core react hooks to build a blitz roadmap",
   "license": "MIT",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "exports": {
     ".": {
       "import": "./dist/main.mjs",
