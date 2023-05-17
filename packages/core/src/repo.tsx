@@ -47,6 +47,8 @@ export const RepoProvider: React.FC<React.PropsWithChildren<{ repoName: string }
 
   useEffect(() => {
     fetchRepo();   
+
+    return () => setRepo(null);
   }, [fetchRepo]);
 
   return (
@@ -80,5 +82,5 @@ export function useMakeProposal() {
 
     await fetchRepo();
     return result
-  }, [repo])
+  }, [fetchRepo, repo])
 }

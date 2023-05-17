@@ -23,5 +23,9 @@
   "dependencies": {},
   "peerDependencies": {
     "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "vite": "^4.3.7"
   }
 }

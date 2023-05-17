@@ -1,27 +1,35 @@
+import { useEffect, useState } from "react";
+
 function getCookie(key: string) {
   const cookies = document.cookie.split(';');
   const cookie = cookies.find(cookie => cookie.trim().startsWith(key + '='));
-  const value = cookie ? cookie.split('=')[1] : null;
+  const value = cookie ? cookie.split('=')[1] : undefined;
 
-  return value
+  return value;
 }
 
 const setCookie = (name: string, value: string) => {
-  const cookie = name + "=" + value + ";path=/";
+  document.cookie = name + "=" + value + "; path=/";
+}
 
-  document.cookie = document.cookie ? document.cookie + ";" + cookie : cookie;
+function useCookie(key: string, initialValue: () => string) {
+  const [value, setValue] = useState(() => {
+    const cookieValue = getCookie(key);
+    if (cookieValue !== undefined) {
+      return cookieValue;
+    }
+    return initialValue();
+  });
+
+  useEffect(() => {
+    setCookie(key, value);
+  }, [key, value]);
+
+  return [value, setValue] as const;
 }
 
 export function useBlitzId(defaultBlitzId?: string) {
-  if (defaultBlitzId) return defaultBlitzId;
+  const [cookie] = useCookie('blitz_uid', () => self.crypto.randomUUID());
 
-  const blitzId = getCookie('blitz_uid')
-
-  if (blitzId) return blitzId;
-  
-  const generatedBlitzId = self.crypto.randomUUID();
-
-  setCookie('blitz_uid', generatedBlitzId);
-
-  return generatedBlitzId;
+  return defaultBlitzId ?? cookie;
 }

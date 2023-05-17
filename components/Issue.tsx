@@ -1,12 +1,12 @@
 import { Button } from '@/components/Button';
-import { useVoteHandler, useProposal, useBlitzId } from '@theoberton/blitz-core';
+import { useVoteHandler, useProposal } from '@theoberton/blitz-core';
 
-export function Issue({ issue }: {
+export function Issue({ userId, issue }: {
+  userId: string,
   issue: { number: number; title: string}
 }) {
-  const blitzId = useBlitzId();
-  const voteHandler = useVoteHandler({ voterUid: blitzId, proposalNumber: issue.number });
-  const { currentVote, votesCount } = useProposal({ voterUid: blitzId, proposalNumber: issue.number }); 
+  const voteHandler = useVoteHandler({ voterUid: userId, proposalNumber: issue.number });
+  const { currentVote, votesCount } = useProposal({ voterUid: userId, proposalNumber: issue.number }); 
 
   return (
     <div className={`flex flex-wrap justify-end items-center min-h-11 py-2 gap-3 text-sm border-b border-[#212234]`}>
