@@ -2,7 +2,7 @@
   "name": "@theoberton/blitz-core",
   "description": "Core react hooks to build a blitz roadmap",
   "license": "MIT",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "exports": {
     ".": {
       "import": "./dist/main.mjs",
@@ -20,9 +20,8 @@
     "build:watch": "tsc && vite build --watch",
     "dev": "vite"
   },
-  "dependencies": {},
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^16.8.0 || ^17.0.2 || ^18.2.0"
   },
   "devDependencies": {
     "typescript": "^5.0.4",

@@ -825,17 +825,17 @@
   dependencies:
     tslib "^2.4.0"
 
-"@theoberton/blitz-core@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.16.tgz#786eb67328c74291bc916a8db13b432c81ba786f"
-  integrity sha512-j6hjzd4gQJt9F6cS533MsIlb5LWBgZtrp0niMyB7bkIRkRPnG7Unt/poW1V8kZhXog3x3gSgPfBjQZV9ktVT4A==
+"@theoberton/blitz-core@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.17.tgz#50cee8736088bcfe1785390caa2da16c0c1f5d0e"
+  integrity sha512-FLoHaLF660/OEm1I2qHdrDKX+/Ksq+pk1n9GX4Kjs+dnhSKrVk5OXwoqUkiES5VMxsBAgXsG6+RkU/2xpUdQ4Q==
 
-"@theoberton/blitz-shopify@^0.0.16":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/@theoberton/blitz-shopify/-/blitz-shopify-0.0.16.tgz#580ef66ab86b321b41b49ebc90f5d7bc44f1cf7f"
-  integrity sha512-TyXsIQAtQ/hkLB0E0ei5YiGk6dTjVc0PyznP3QSMFm+bEn9dMb307gXIiUBi+GYzOUlsbE/hcJ2K96iRYciH3Q==
+"@theoberton/blitz-shopify@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@theoberton/blitz-shopify/-/blitz-shopify-0.0.17.tgz#79cadc9383f523bcd90070ff41771653c198a8e2"
+  integrity sha512-kyTGMvT5qZwOB3PzhpUvHpMi4A40q8MpLLuEpquEwEtrE9Fad7tWo5Yo3CNBeptLTJimU2tpzqUhTSciPyi9IQ==
   dependencies:
-    "@theoberton/blitz-core" "^0.0.16"
+    "@theoberton/blitz-core" "^0.0.17"
 
 "@types/aws-lambda@^8.10.83":
   version "8.10.115"
