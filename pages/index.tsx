@@ -25,7 +25,7 @@ const BuilderOnboarding = () => {
         </div>
         <p className="text-muted">have a <b>private</b> repo? install the github app and come back</p>
         <div className="mb-12 max-w-[16rem]">
-          <Button as="a" href="https://github.com/apps/blitzmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
+          <Button as="a" href="https://github.com/marketplace/blitz-public-roadmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
         </div>
         
         <p className="text-muted mb-12">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r?repo=theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
