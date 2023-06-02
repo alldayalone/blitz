@@ -830,6 +830,11 @@
   resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.17.tgz#50cee8736088bcfe1785390caa2da16c0c1f5d0e"
   integrity sha512-FLoHaLF660/OEm1I2qHdrDKX+/Ksq+pk1n9GX4Kjs+dnhSKrVk5OXwoqUkiES5VMxsBAgXsG6+RkU/2xpUdQ4Q==
 
+"@theoberton/blitz-core@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@theoberton/blitz-core/-/blitz-core-0.0.18.tgz#aac67c883eafeef00b7d772da86d1585a63999e8"
+  integrity sha512-uxRVXfTC9ul2253HvGIhI9M7e9Yhh4QLTEzzZjDGqSZd7mLuW0Feb8A6J8pKoDZxX4rgJfTkMGjmtT/Ub6hZnw==
+
 "@theoberton/blitz-shopify@^0.0.17":
   version "0.0.17"
   resolved "https://registry.yarnpkg.com/@theoberton/blitz-shopify/-/blitz-shopify-0.0.17.tgz#79cadc9383f523bcd90070ff41771653c198a8e2"
