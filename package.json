@@ -12,7 +12,7 @@
     "@octokit/types": "^9.0.0",
     "@shopify/polaris": "^10.49.1",
     "@splitbee/web": "^0.3.0",
-    "@theoberton/blitz-core": "^0.0.17",
+    "@theoberton/blitz-core": "^0.0.18",
     "@theoberton/blitz-shopify": "^0.0.17",
     "@types/node": "^20.0.0",
     "@types/react": "18.0.33",
