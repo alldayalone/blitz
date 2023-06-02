@@ -9,7 +9,7 @@ function OnboardPage() {
   const router = useRouter();
 
   return <Layout>
-    <h1 className="text-3xl mt-16 max-xs:mt-0 mb-8">what&apos;s the next feature you're building?</h1>
+    <h1 className="text-3xl mt-16 max-xs:mt-0 mb-8">what&apos;s the next feature you&apos;re building?</h1>
 
     <form onSubmit={(e) => {
       e.preventDefault();

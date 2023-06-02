@@ -38,7 +38,7 @@ function RoadmapPage() {
     <div className="h-screen p-10">
       <h1 className="text-3xl mb-10">Your product page is live 🚀 <p>→ <Link data-splitbee-event="click roadmap" target="_blank" className='text-blue-400' href="/r?repo=theoberton/broh">https://blitz.vote/{productName}</Link> ←</p></h1>
       
-      <p className="mb-10">what's next?</p>  
+      <p className="mb-10">what&apos;s next?</p>  
       <p><input type="checkbox" /> add more features to the roadmap using <strong>propose</strong> button</p>
       <p><input type="checkbox" /> drop the link in your socials or somewhere in the app</p>
      <div className="max-w-3xl">
