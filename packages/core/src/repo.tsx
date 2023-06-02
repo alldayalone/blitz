@@ -40,7 +40,7 @@ export const RepoProvider: React.FC<React.PropsWithChildren<{ repoName: string }
       return;
     }
 
-    const data: { repository: Repo } = await fetch(`https://pasha.npkn.net/blitz-issues/${repoName}`).then(res => res.json());
+    const data: { repository: Repo } = await fetch(`https://pasha.npkn.net/blitz-issues/issues/${repoName}`).then(res => res.json());
 
     setRepo(data.repository);
   }, [repoName]);
@@ -66,7 +66,7 @@ export function useMakeProposal() {
   return useCallback(async ({ oneliner, description } : { oneliner: string, description: string }) => {
     if (!repo) return;
 
-    const result = await fetch(`https://pasha.npkn.net/blitz-issues/${repo.nameWithOwner}`, {
+    const result = await fetch(`https://pasha.npkn.net/blitz-issues/issues/${repo.nameWithOwner}`, {
       method: 'POST',
       body: JSON.stringify({
         mutation: 'propose',
