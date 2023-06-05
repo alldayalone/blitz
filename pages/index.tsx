@@ -1,41 +1,52 @@
-import { useRouter } from "next/router";
-import Link from 'next/link';
-import splitbee from "@splitbee/web";
-import { Layout } from '@/components/Layout';
+import { Layout } from "@/components/Layout";
 import { Button } from "@/components/Button";
+import { useRouter } from "next/router";
+import splitbee from '@splitbee/web';
+import Link from "next/link";
+
 import pashaPhoto from '@/public/pasha_photo.png';
 import Image from "next/image";
-
-const BuilderOnboarding = () => {  
+import { useState } from "react";
+function OnboardPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
-  return (
-    <Layout>
-      <div className="flex flex-col gap-5 relative">
-        <h1 className="text-3xl mt-16 max-xs:mt-0 mb-5">setup your public roadmap in 5 mins 😏</h1>
-        <p className="text-muted">do you have a public github repo? just paste a link!</p>
-        <div className="flex flex-col gap-5 mb-12 max-w-[28rem]">
-          <input className="bg-darkslategray placeholder-[#4c4f6b] py-3 px-4 rounded" type="text" onChange={(e) => {
-            const link = e.target.value;
-            const repo = link.split('/').slice(-2).join('/');
-            splitbee.track('Paste repo', { repo });
-
-            router.push(`/r?repo=${repo}`);
-          }} placeholder="https://github.com/theoberton/blitz" />
+  return <div className="w-screen h-screen px-10 pt-20 ">
+    <div className="flex gap-16">
+    <div className="w-1/2 h-[40rem] mb-10 border p-2 border-slate-400 rounded-xl relative">
+        <div className="flex border-b-slate-400 items-center">
+          <div className="flex gap-1">
+            <div className="w-3 h-3 rounded-full bg-slate-400 opacity-40" />
+            <div className="w-3 h-3 rounded-full bg-slate-400 opacity-40" />
+            <div className="w-3 h-3 rounded-full bg-slate-400 opacity-40" />
+          </div>
+          <div className="flex-1 text-center">
+            <a className="text-slate-400 hover:underline" href="https://blitz.vote/blitz" target="_blank">https://blitz.vote/blitz</a>
+          </div>
         </div>
-        <p className="text-muted">have a <b>private</b> repo? install the github app and come back</p>
-        <div className="mb-12 max-w-[16rem]">
-          <Button as="a" href="https://github.com/marketplace/blitz-public-roadmap" target="_blank" rel="noopener noreferrer" data-splitbee-event="install app" >install gh app</Button>
+        {/* spinner */}
+        {isLoading &&
+          <div className="left-[calc(50%-4rem)] flex justify-center items-center h-full">
+           <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-slate-400" />
+          </div>
+        }
+        <div style={{position: "relative", paddingBottom: "62.5%", height: "600px"}}>
+          <iframe src={`https://blitz.vote/blitz`} onLoad={() => setIsLoading(false)}
+            style={{ display: isLoading ? 'none': 'block', position: "absolute", top: 0, left: 0, width: '100%', height: '100%'}} className="bg-transparent">
+          </iframe>
         </div>
-        
-        <p className="text-muted mb-12">just chilling? check out blitz roadmap → <Link data-splitbee-event="click roadmap" className='text-blue-600' href="/r?repo=theoberton/blitz">roadmap ( ^ ͜ʖ ^ )</Link></p>
-
-        <a href="https://youtu.be/StHVi2jFzlI" target="_blank" className="w-[150px] hover:scale-105 transition absolute bottom-[-120px] left-1/2 translate-x-[-75px] sm:bottom-0 sm:left-full sm:translate-x-[-150px]" >
-          <Image width="150" src={pashaPhoto} alt="author photo" />
-        </a>
+       
       </div>
-    </Layout>
-  )
+      <div>
+      <h1 className="text-3xl mt-16 max-xs:mt-0 mb-8">find out what people <span className="bg-red-500"> actually want</span> from your product!</h1>
+    <p className="text-muted text-xl mb-10">launch a public page for your product roadmap in 5 mins ( ^ ͜ʖ ^ )</p>
+    <a data-splitbee-event="demo" href="https://youtu.be/StHVi2jFzlI" target="_blank" className="w-[150px] mt-5 hover:scale-105 transition absolute bottom-[-120px] left-1/2 translate-x-[-75px] sm:bottom-0 sm:left-full sm:translate-x-[-150px]" >
+      <Image width="150" src={pashaPhoto} alt="author photo" />
+    </a>
+    <Button size="large" data-splitbee-event="onboard: product name" className='w-sm items-center mt-4' onClick={() => router.push("/onboard-1")}>ok, let&apos;s do it! →</Button>
+      </div>
+    </div>
+   
+  </div>
 }
 
-export default BuilderOnboarding;
+export default OnboardPage;
