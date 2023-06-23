@@ -7,12 +7,13 @@ import Link from "next/link";
 import pashaPhoto from '@/public/pasha_photo.png';
 import Image from "next/image";
 import { useState } from "react";
+
 function OnboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  return <div className="w-screen h-screen px-10 pt-20 ">
-    <div className="flex gap-16">
-    <div className="w-1/2 h-[40rem] mb-10 border p-2 border-slate-400 rounded-xl relative">
+  return <div className="w-screen h-screen max-md:px-4 md:px-10 max-md:pt-8 md:pt-20">
+    <div className="flex max-md:flex-col-reverse gap-16">
+      <div className="max-lg:w-full lg:w-1/2 h-[40rem] mb-10 border p-2 border-slate-400 rounded-xl relative">
         <div className="flex border-b-slate-400 items-center">
           <div className="flex gap-1">
             <div className="w-3 h-3 rounded-full bg-slate-400 opacity-40" />
@@ -34,15 +35,14 @@ function OnboardPage() {
             style={{ display: isLoading ? 'none': 'block', position: "absolute", top: 0, left: 0, width: '100%', height: '100%'}} className="bg-transparent">
           </iframe>
         </div>
-       
       </div>
-      <div>
-      <h1 className="text-3xl mt-16 max-xs:mt-0 mb-8">find out what people <span className="bg-red-500"> actually want</span> from your product!</h1>
-    <p className="text-muted text-xl mb-10">launch a public page for your product roadmap in 5 mins ( ^ ͜ʖ ^ )</p>
-    <a data-splitbee-event="demo" href="https://youtu.be/StHVi2jFzlI" target="_blank" className="w-[150px] mt-5 hover:scale-105 transition absolute bottom-[-120px] left-1/2 translate-x-[-75px] sm:bottom-0 sm:left-full sm:translate-x-[-150px]" >
-      <Image width="150" src={pashaPhoto} alt="author photo" />
-    </a>
-    <Button size="large" data-splitbee-event="onboard: product name" className='w-sm items-center mt-4' onClick={() => router.push("/onboard-1")}>ok, let&apos;s do it! →</Button>
+      <div className="relative flex flex-col">
+        <h1 className="text-3xl mt-16 max-xs:mt-0 mb-8">find out what people <span className="bg-red-500"> actually want</span> from your product!</h1>
+        <p className="text-muted text-xl mb-10">launch a public page for your product roadmap in 5 mins ( ^ ͜ʖ ^ )</p>
+        <Button size="large" data-splitbee-event="onboard: product name" className='w-sm items-center mt-4' onClick={() => router.push("/onboard-1")}>ok, let&apos;s do it! →</Button>
+        <a data-splitbee-event="demo" href="https://youtu.be/StHVi2jFzlI" target="_blank" className="w-[150px] mt-5 hover:scale-105 transition self-center" >
+          <Image width="150" src={pashaPhoto} alt="author photo" />
+        </a>
       </div>
     </div>
    
