@@ -46,7 +46,7 @@ function RoadmapPage() {
   `
 
   return (
-    <div className="h-screen p-10 flex gap-8">
+    <div className="min-h-screen p-10 flex max-md:flex-col-reverse gap-8">
       <div className="flex-1 mb-10 border p-2 border-slate-400 rounded-xl">
         <div className="flex border-b-slate-400 items-center">
           <div className="flex gap-1">
@@ -70,7 +70,7 @@ function RoadmapPage() {
         </div>
       </div>
 
-      <div className="w-1/2">
+      <div className="md:w-1/2">
         <h1 className="text-3xl text-white mb-10">your roadmap page is live 🚀</h1>
         
         <p className="mb-3">what&apos;s next?</p>  
@@ -78,16 +78,15 @@ function RoadmapPage() {
         <p><input type="checkbox" /> leave a link to the roadmap somewhere in your app or socials</p>
         <p><input type="checkbox" /> say hi to me on <a className="text-blue-400 underline" target="_blank" href="https://twitter.com/alldayalone">twitter ➡️</a> 😊</p>
 
-        <h2 className="text-lg mt-32">Embed in your app!</h2>
+        <h2 className="text-lg max-md:mt-4 md:mt-32">Embed in your app!</h2>
         <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          /** Put your mantine theme override here */
-          colorScheme: 'dark',
-        }}
-      >
-        <Prism language="tsx">{demoCode}</Prism>
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{
+            colorScheme: 'dark',
+          }}
+        >
+          <Prism language="tsx">{demoCode}</Prism>
         </MantineProvider>
       </div>
     </div>
