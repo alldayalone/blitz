@@ -6,12 +6,16 @@ import * as mongo from '@/utils/mongo';
 import { DaoStateProvider, useProposal, useVoteHandler } from '@/utils/voteState';
 import { setCookie, getCookie, hasCookie } from 'cookies-next';
 import { v4 as uuid } from 'uuid';
+import Head from 'next/head';
 
+const IMAGE_OG = "https://img.freepik.com/free-vector/thunderbolt-icon-illustration_32991-963.jpg?w=826&t=st=1693077549~exp=1693078149~hmac=db0887547b80aae8598092ef0d004313ed29bd3dd8c5a2cfd2ed1b9c925cb8de";
 
-const ProjectPage: React.FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ project, blitzId }) => {
+const ProjectPage: React.FC<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ project, blitzId, host }) => {
   if (!project) {
     return <div>could not find the project :(</div>
   }
+
+  const url = host + '/' + project.handle;
 
   const propose = async () => {
     const title = prompt("what's your idea?");
@@ -32,6 +36,27 @@ const ProjectPage: React.FC<InferGetServerSidePropsType<typeof getServerSideProp
   }
 
   return (
+    <>
+     <Head>
+        <title>{`Blitz - ${project.name}`}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+        <meta name="description" content={project.description} />
+
+        <meta property="og:url" content={url}/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content={project.name} />
+        <meta property="og:description" content={project.description} />
+        <meta property="og:image" content={IMAGE_OG} />
+
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta property="twitter:domain" content={host}/>
+        <meta property="twitter:url" content={url}/>
+        <meta name="twitter:title" content={project.name} />
+        <meta name="twitter:description" content={project.description} />
+        <meta name="twitter:image" content={IMAGE_OG} />
+
+      </Head>
+    
     <Layout>
       <div className='bg-dark-blue'>
         <div className="my-5 flex flex-col justify-end gap-4">
@@ -63,6 +88,7 @@ const ProjectPage: React.FC<InferGetServerSidePropsType<typeof getServerSideProp
       </DaoStateProvider>
      
     </Layout>
+    </>
   );
 }
 
@@ -97,7 +123,7 @@ const Issue: React.FC<{ feat: mongo.Project['features'][number], blitzId: string
   )
 }
 
-export const getServerSideProps: GetServerSideProps<{ project: mongo.Project | undefined | null, blitzId: string }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<{ project: mongo.Project | undefined | null, blitzId: string, host: string | undefined }> = async (ctx) => {
   // Fetch data from external API
   // const res = await fetch(`https://.../data`);
 
@@ -142,7 +168,7 @@ export const getServerSideProps: GetServerSideProps<{ project: mongo.Project | u
   }
   
   // Pass data to the page via props
-  return { props: { project, blitzId } };
+  return { props: { project, blitzId, host: ctx.req.headers.host } };
 }
 
 export default ProjectPage;
